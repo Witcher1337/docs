@@ -1,20 +1,21 @@
 ---
-sidebar_position: 2
+sidebar_position: 1
 ---
-# Авторизация
-Служит для авторизации пользователей.
+# Регистрация
 
 <pre>
-<b>POST</b> v1/access_token
+<b>POST</b> v1/sign-up
 </pre>
+
+Служит для регистрации новых пользователей.
 
 ### Request body
 | Syntax                                    | Description                                                   |
 | ----------------------------------------- | ------------------------------------------------------------- |
 | client_id <font color="red">*</font>      | Идентификатор клиента                                         |
-| client_secret  <font color="red">*</font> | Секретный ключ клиента                                        |
-| username  <font color="red">*</font>      | Логин пользователя                                            |
+| email  <font color="red">*</font>         | Почтовый адрес пользователя                                   |
 | password  <font color="red">*</font>      | Пароль пользователя                                           |
+| connection  <font color="red">*</font>    | Название необходимой базы данных                              |
 
 ### Response
 ```
