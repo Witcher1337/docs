@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 # Выход
 
@@ -8,10 +8,3 @@ sidebar_position: 4
 </pre>
 
 Используйте данный роут чтобы удалить сессию пользователя при выходе из системы
-
-### Request body
-| Syntax                                    | Description                                                   |
-| ----------------------------------------- | ------------------------------------------------------------- |
-| client_id <font color="red">*</font>      | Идентификатор клиента                                         |
-| token  <font color="red">*</font>         | Токен пользователя                                            |
-| connection  <font color="red">*</font>    | Название необходимой базы данных                              |
