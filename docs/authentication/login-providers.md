@@ -22,8 +22,8 @@ sidebar_position: 3
 
   <tbody>
     <tr>
-      <td>provider</td>
-      <td>Имя провайдера социальной сети, к примеру <code>gos-uslugi-oauth2</code>, если провайдер не указан, то по откроется окно авторизации по умолчанию</td>
+      <td>providerБ<font color="red">*</font></td>
+      <td>Имя провайдера социальной сети, к примеру <code>gos-uslugi-oauth2</code></td>
     </tr>
    <tr>
       <td>redirect_uri<font color="red">*</font></td>
