@@ -6,7 +6,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'BearLogin',
+  title: 'Bearlogin',
   tagline: 'Сервис для авторизации',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
@@ -36,6 +36,17 @@ const config = {
           customCss: require.resolve('./src/css/custom.css'),
         },
       }),
+    ],
+    [
+      'redocusaurus',
+      {
+        specs: [
+          {
+            spec: 'docs/api/gate/index.yml',
+            route: '/docs/api/gate/',
+          },
+        ],
+      },
     ],
   ],
 
