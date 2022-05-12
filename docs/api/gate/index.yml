@@ -5,6 +5,11 @@ info:
 servers:
   - url: /v0
 paths:
+  /admission/methods:
+    get:
+      summary: Список методов, доступных для входа
   /admission:
     post:
       summary: Начало процесса входа
+    patch:
+      summary: Передача необходимых реквизитов для шага процесса входа
