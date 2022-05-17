@@ -19,12 +19,36 @@ definitions:
   FormName:
     description: Наименование формы, к примеру `signIn` или `signUp`
     type: string
+  ApplicationId:
+    description: ID вашего приложения
+    type: string
+  TooManyRetries:
+    description: Слишком много попыток
+  ApplicationNotFound:
+    definitions: Приложение с таким идентификатором не было найдено
+components:
+  schemas:
+    Common:
+      type: object
+      properties:
+        application_id:
+          $ref: "#/definitions/ApplicationId"
+  parameters:
+    Common:
+      in: path
+      name: application_id
+      $ref: "#/definitions/ApplicationId"
+      required: true
+      type: string
 paths:
   /admission/methods:
     get:
       summary: Получение способов авторизации
       description: Данный роут предназначен для получения всех возможных вам способов авторизации
-      required: true
+      parameters:
+        - $ref: "#/components/parameters/Common"
+      required:
+        - application_id
       responses:
         200:
           $ref: "#/definitions/Success"
@@ -36,25 +60,27 @@ paths:
                   type: object
                   properties:
                     id:
-                      description: Следует указать тип авторизации, которую вы хотите использовать
+                      description: Тип авторизации, который вы хотите использовать
                       type: string
 
   /admission:
     post:
       summary: Авторизация
       description: Optional description in *Markdown*
-      required: true
       requestBody:
         content:
           application/json:
             schema:
+              allOf:
+                - $ref: "#/components/schemas/Common"
               oneOf:
                 - type: object
                   title: Обычная
                   properties:
                     redirect_uri:
                       $ref: "#/definitions/RedirectURI"
-                  required: redirect_uri
+                  required:
+                    - redirect_uri
                 - type: object
                   description: Используйте данный роут для аутентификации через какой либо провайдер социальной сети. Успешный запрос вернет статус 302 и произведет редирект к указанному в connection провайдеру.
                   title: C помощью провайдера
@@ -75,24 +101,46 @@ paths:
                       description: Следует указать как `manual`
                     formName:
                       $ref: "#/definitions/FormName"
+                    data:
+                      type: object
+                      description: "Данные для отправки"
                   required:
+                    - data
                     - mode
                     - formName
       responses:
         200:
           description: "Будут установлены соответствующие HTTP cookies"
-
+        429:
+          $ref: "#/definitions/TooManyRetries"
+        404:
+          $ref: "#/definitions/ApplicationNotFound"
   /profile:
     get:
       summary: Профиль пользователя
       description: Данный роут вернет объект пользователя с замаскированными данными.
+      parameters:
+        - $ref: "#/components/parameters/Common"
       responses:
         200:
           $ref: "#/definitions/Success"
+        429:
+          $ref: "#/definitions/TooManyRetries"
+        404:
+          $ref: "#/definitions/ApplicationNotFound"
   /logout:
     post:
       summary: Выход из аккаунта
-      description: Данный роут вернет объект пользователя с замаскированными данными.
+      description: Данный роут удалит сессию пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Common"
       responses:
         200:
           $ref: "#/definitions/Success"
+        429:
+          $ref: "#/definitions/TooManyRetries"
+        404:
+          $ref: "#/definitions/ApplicationNotFound"
