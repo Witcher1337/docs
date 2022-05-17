@@ -71,7 +71,7 @@ const config = {
             items: [
               {
                 label: 'Tutorial',
-                to: '/docs/authentication/login',
+                to: '/docs/api/gate/',
               },
             ],
           },
