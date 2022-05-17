@@ -20,10 +20,10 @@ definitions:
     description: Наименование формы, к примеру `signIn` или `signUp`
     type: string
 paths:
-  /admissions:
+  /admission/methods:
     get:
-      summary: Получение способов аутентификации
-      description: Данный роут предназначен для получения всех возможных вам способов аутентификации
+      summary: Получение способов авторизации
+      description: Данный роут предназначен для получения всех возможных вам способов авторизации
       required: true
       responses:
         200:
