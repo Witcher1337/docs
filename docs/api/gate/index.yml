@@ -4,12 +4,95 @@ info:
   version: 0.0.1
 servers:
   - url: /v0
+definitions:
+  Success:
+    description: Успешный ответ
+  Redirect:
+    description: Редирект на переданный вами URI
+  AdmissionType: string
+  Provider:
+    description: Имя провайдера социальной сети, к примеру gos-uslugi-oauth2
+    type: string
+  RedirectURI:
+    description: URL на который произойдет редирект после успешной авторизации
+    type: string
+  FormName:
+    description: Наименование формы, к примеру `signIn` или `signUp`
+    type: string
 paths:
   /admission/methods:
     get:
-      summary: Список методов, доступных для входа
+      summary: Получение способов авторизации
+      description: Данный роут предназначен для получения всех возможных вам способов авторизации
+      required: true
+      responses:
+        200:
+          $ref: "#/definitions/Success"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      description: Следует указать тип авторизации, которую вы хотите использовать
+                      type: string
+
   /admission:
     post:
-      summary: Начало процесса входа
-    patch:
-      summary: Передача необходимых реквизитов для шага процесса входа
+      summary: Авторизация
+      description: Optional description in *Markdown*
+      required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  title: Обычная
+                  properties:
+                    redirect_uri:
+                      $ref: "#/definitions/RedirectURI"
+                  required: redirect_uri
+                - type: object
+                  description: Используйте данный роут для аутентификации через какой либо провайдер социальной сети. Успешный запрос вернет статус 302 и произведет редирект к указанному в connection провайдеру.
+                  title: C помощью провайдера
+                  properties:
+                    provider:
+                      $ref: "#/definitions/Provider"
+                    redirect_uri:
+                      $ref: "#/definitions/RedirectURI"
+                  required:
+                    - provider
+                    - redirect_uri
+                - type: object
+                  title: Ручная
+                  description: Используйте данный способ авторизации в том случае, если есть необходимость внедрения авторизации в свое приложение, не используя при этом редиректы и открытие новых окон.
+                  properties:
+                    mode:
+                      type: string,
+                      description: Следует указать как `manual`
+                    formName:
+                      $ref: "#/definitions/FormName"
+                  required:
+                    - mode
+                    - formName
+      responses:
+        200:
+          description: "Будут установлены соответствующие HTTP cookies"
+
+  /profile:
+    get:
+      summary: Профиль пользователя
+      description: Данный роут вернет объект пользователя с замаскированными данными.
+      responses:
+        200:
+          $ref: "#/definitions/Success"
+  /logout:
+    post:
+      summary: Выход из аккаунта
+      description: Данный роут вернет объект пользователя с замаскированными данными.
+      responses:
+        200:
+          $ref: "#/definitions/Success"
