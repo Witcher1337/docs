@@ -5,8 +5,6 @@ info:
 servers:
   - url: /v0
 definitions:
-  Success:
-    description: Успешный ответ
   Redirect:
     description: Редирект на переданный вами URI
   AdmissionType: string
@@ -22,14 +20,19 @@ definitions:
   ApplicationId:
     description: ID вашего приложения
     type: string
-  TooManyRetries:
-    description: Слишком много попыток
-  ApplicationNotFound:
-    definitions: Приложение с таким идентификатором не было найдено
+
+  statuses:
+    200:
+      description: Успешный ответ
+    429:
+      description: Слишком много попыток
+    404:
+      description: Приложение с таким идентификатором не было найдено
 components:
   schemas:
     Common:
       type: object
+      required: application_id
       properties:
         application_id:
           $ref: "#/definitions/ApplicationId"
@@ -51,7 +54,7 @@ paths:
         - application_id
       responses:
         200:
-          $ref: "#/definitions/Success"
+          $ref: "#/definitions/statuses/200"
           content:
             application/json:
               schema:
@@ -62,6 +65,10 @@ paths:
                     id:
                       description: Тип авторизации, который вы хотите использовать
                       type: string
+        429:
+          $ref: "#/definitions/statuses/429"
+        404:
+          $ref: "#/definitions/statuses/404"
 
   /admission:
     post:
@@ -112,9 +119,9 @@ paths:
         200:
           description: "Будут установлены соответствующие HTTP cookies"
         429:
-          $ref: "#/definitions/TooManyRetries"
+          $ref: "#/definitions/statuses/429"
         404:
-          $ref: "#/definitions/ApplicationNotFound"
+          $ref: "#/definitions/statuses/404"
   /profile:
     get:
       summary: Профиль пользователя
@@ -123,11 +130,11 @@ paths:
         - $ref: "#/components/parameters/Common"
       responses:
         200:
-          $ref: "#/definitions/Success"
+          $ref: "#/definitions/statuses/200"
         429:
-          $ref: "#/definitions/TooManyRetries"
+          $ref: "#/definitions/statuses/429"
         404:
-          $ref: "#/definitions/ApplicationNotFound"
+          $ref: "#/definitions/statuses/404"
   /logout:
     post:
       summary: Выход из аккаунта
@@ -139,8 +146,8 @@ paths:
               $ref: "#/components/schemas/Common"
       responses:
         200:
-          $ref: "#/definitions/Success"
+          $ref: "#/definitions/statuses/200"
         429:
-          $ref: "#/definitions/TooManyRetries"
+          $ref: "#/definitions/statuses/429"
         404:
-          $ref: "#/definitions/ApplicationNotFound"
+          $ref: "#/definitions/statuses/404"
